@@ -39,6 +39,8 @@ In order to detect words correctly, it is important to first recognize the zones
 
 ### References:  
 [Improve OCR accuracy by image preprocessing](https://docparser.com/blog/improve-ocr-accuracy/)  
-[Tessaract image preprocessing](https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html)
+[Tessaract image preprocessing](https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html)  
+[How to automatically deskew a text image using OpenCV](https://towardsdatascience.com/image-processing-with-python-blurring-and-sharpening-for-beginners-3bcebec0583a)  
+
 
  
