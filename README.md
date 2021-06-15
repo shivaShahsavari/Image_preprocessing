@@ -24,14 +24,20 @@ Noise can drastically reduce the overall quality of the OCR process. It can be p
 This may also be referred to as rotation. The text should appear horizontal and not tilted in any angle. So, if the image is skewed to any side, deskew it by rotating it clockwise or anti clockwise direction.  
 
 ## Dilation and Erosion  
+Bold characters or Thin characters (especially those with Serifs) may impact the recognition of details and reduce recognition accuracy. Many image processing programs allow Dilation and Erosion of edges of characters against a common background to dilate or grow in size (Dilation) or shrink (Erosion).
+Heavy ink bleeding from historical documents can be compensated for by using an Erosion technique. Erosion can be used to shrink characters back to their normal glyph structure. 
 
+## Border removal  
+Scanned pages often have dark borders around them. These can be erroneously picked up as extra characters, especially if they vary in shape and gradation.  
 
-
+## Transparency / Alpha channel  
+Some image formats (e.g. png) can have an alpha-channel for providing a transparency feature. Some libraries remove the alpha component by blending it with a white background. In some case (e.g. OCR of movie subtitles) this can lead to problems, so users would need to remove the alpha channel (or pre-process the image by inverting image colors) by themself.
 
 ## Layout/Zone Analysis  
 In order to detect words correctly, it is important to first recognize the zones or the layout (which are also the areas of interest). This step detects the paragraphs, tables, columns, captions of the images etc. If the software misses out on any zone or layout, words might be cut in half or not detected at all.
 
-**References:  
-[Improve OCR accuracy by image preprocessing](https://docparser.com/blog/improve-ocr-accuracy/)
+### References:  
+[Improve OCR accuracy by image preprocessing](https://docparser.com/blog/improve-ocr-accuracy/)  
+[Tessaract image preprocessing](https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html)
 
  
