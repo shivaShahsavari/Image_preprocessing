@@ -31,7 +31,8 @@ Heavy ink bleeding from historical documents can be compensated for by using an 
 Scanned pages often have dark borders around them. These can be erroneously picked up as extra characters, especially if they vary in shape and gradation.  
 
 ## Transparency / Alpha channel  
-Some image formats (e.g. png) can have an alpha-channel for providing a transparency feature. Some libraries remove the alpha component by blending it with a white background. In some case (e.g. OCR of movie subtitles) this can lead to problems, so users would need to remove the alpha channel (or pre-process the image by inverting image colors) by themself.
+Some image formats (e.g. png) can have an alpha-channel for providing a transparency feature. Some libraries remove the alpha component by blending it with a white background. In some case (e.g. OCR of movie subtitles) this can lead to problems, so users would need to remove the alpha channel (or pre-process the image by inverting image colors) by themself.  
+**Note** : The alpha channel is a color component that represents the degree of transparency (or opacity) of a color (i.e., the red, green and blue channels). It is used to determine how a pixel is rendered when blended with another.
 
 ## Layout/Zone Analysis  
 In order to detect words correctly, it is important to first recognize the zones or the layout (which are also the areas of interest). This step detects the paragraphs, tables, columns, captions of the images etc. If the software misses out on any zone or layout, words might be cut in half or not detected at all.
