@@ -18,6 +18,7 @@ Low contrast can result in poor OCR and Increasing the contrast between the text
 
 ## Binarization  
 This step converts a multicolored image (RGB) to a black and white image. Most OCR engines are internally working with monochrome images. So, better to conver and color image to monochrome image. Another advantage of binarizing your images before sending them to your OCR engine is the reduced size of your images.  
+(we can binarize an image with cv2. threshold() . If type is set to cv2. THRESH_BINARY , any value greater than the threshold thresh is replaced with maxval and the other values are replaced with 0 )
 
 ## Noise removal  
 Noise can drastically reduce the overall quality of the OCR process. It can be present in the background or foreground and can result from poor scanning or the poor original quality of the data. based on the nature of the source image, different types of noises may be present which needs to be handled in a specific way. Let us explore them now.
