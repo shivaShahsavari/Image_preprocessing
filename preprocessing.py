@@ -28,7 +28,6 @@ def border_rmv(im):
         if area < 10000:
             cv.drawContours(mask, [c], -1, (255,255,255), -1)
 
-    #mask = cv.cvtColor(mask, cv.COLOR_BGR2GRAY)
     result = cv.bitwise_and(im,im,mask=mask)
     result[mask==0] = 255
     return result 
@@ -51,10 +50,10 @@ def dilate(im):
 def noise_rm(im):
     im_converted = cv.cvtColor(im, cv.COLOR_BGR2RGB)# cv image to Pillow image
     pil_im = Image.fromarray(im_converted)
-    im1=pil_im.filter(ImageFilter.UnsharpMask(radius=1,percent=150,threshold=2)) #Unsharp without using blur is better than with blur
+    im1=pil_im.filter(ImageFilter.UnsharpMask(radius=1,percent=150,threshold=2)) #Unsharp without blur is better than with blur
     #im2=cv.GaussianBlur(im,(5,5),0) Median & Mode were better than GauissianBlur
-    #im2=cv.medianBlur(img,5) # unsharp better than Median
-    #im3=im.filter(ImageFilter.ModeFilter(3)) # unsharp better than Mode
+    #im2=cv.medianBlur(img,5) # UnsharpMask better than Median
+    #im3=im.filter(ImageFilter.ModeFilter(3)) # UnsharpMask better than Mode
     im_converted2=np.array(im1.convert('RGB')) # pillow image to cv image
     im4=cv.bilateralFilter(im_converted2,9,75,75)
     return im4
@@ -84,18 +83,12 @@ def getSkewAngle(cvImage,imageName):
     dilate = cv.dilate(thresh, kernel, iterations=11)
     # Find all contours
     contours, hierarchy = cv.findContours(dilate, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
-    image_copy = cvImage.copy()
-    cv.drawContours(image=image_copy, contours=contours, contourIdx=-1, color=(36,255,12), thickness=3, lineType=cv.LINE_AA)
-    cv.imwrite(".\\preprocessing\\"+imageName+'_contours.jpg', image_copy)
     contours = sorted(contours, key = cv.contourArea, reverse = True)
     # Find largest contour and surround in min area box
     largestContour = contours[0]
     minAreaRect = cv.minAreaRect(largestContour)
-    image_copy2 = cvImage.copy()
     box = cv.boxPoints(minAreaRect) # cv2.boxPoints(rect) for OpenCV 3.x
     box = np.int0(box)
-    cv.drawContours(image_copy2,[box],0,(36,255,12),2)
-    cv.imwrite(".\\preprocessing\\"+imageName+"_Large_contour.jpg", image_copy2)
     # Determine the angle. Convert it to the value that was originally used to obtain skewed image
     angle = minAreaRect[-1]
     print('Angle : ',angle)
@@ -136,30 +129,20 @@ def main():
     image_name=im.filename.split('.')[0]
     im_scaled=cv.imread(".\\preprocessing\\"+im.filename.split('.')[0]+'_300dpi.'+im.filename.split('.')[1],0)
     im_dsk=deskew(im_scaled,image_name)
-    #cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_deskew.'+im.filename.split('.')[1],im_dsk)
+    cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_deskew.'+im.filename.split('.')[1],im_dsk)
     im_brdr=border_rmv(im_dsk)
-    #cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_rmvBorder.'+im.filename.split('.')[1],im_brdr)
+    cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_rmvBorder.'+im.filename.split('.')[1],im_brdr)
     im_bi=binarize(im_brdr) #Binarization without contrast better then with contrast
-    #cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_bnrz.'+im.filename.split('.')[1],im_bi)
+    cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_bnrz.'+im.filename.split('.')[1],im_bi)
     im_ers=dilate(im_bi)
-    #cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_dilation.'+im.filename.split('.')[1],im_ers)
-    #im3=Image.open(".\\preprocessing\\"+im.filename.split('.')[0]+'_dilation.'+im.filename.split('.')[1])
+    cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_dilation.'+im.filename.split('.')[1],im_ers)
     im_shrp=noise_rm(im_ers)
-    ## check if you can convert 3D to 2D image
-    #cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_shrp.'+im.filename.split('.')[1],im_shrp) 
+    cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_shrp.'+im.filename.split('.')[1],im_shrp) 
     im_opn,im_cl=opcl(im_shrp)
-    #cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_opening.'+im.filename.split('.')[1],im_opn)
-    #cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'closing.'+im.filename.split('.')[1],im_cl)
+    cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_opening.'+im.filename.split('.')[1],im_opn)
+    cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'closing.'+im.filename.split('.')[1],im_cl)
     alpha_im = cv.cvtColor(im_opn, cv.COLOR_RGB2RGBA)
     cv.imwrite(".\\preprocessing\\"+im.filename.split('.')[0]+'_alpha.'+im.filename.split('.')[1],alpha_im)
-
-    '''
-    Note : all of below parameters need to be tuned:
-    Scaling : Size
-    Contrast : Factor
-    Sharp : raduis, percent, threshold
-    dilate : kernel matrix dimension
-    '''
 
 
 if __name__=="__main__":
